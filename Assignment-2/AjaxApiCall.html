@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Data</title>
+    <style>
+        .data-container {
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Weather API Data</h1>
+
+    <div id="weatherData" class="weather-info"></div>
+
+    <script>
+        const apiKey = 'fac356c4f27840a5bd7191025241010';
+        const cities = ['Surat', 'Vadodra', 'Mumbai', 'Chennai', 'Lucknow'];
+
+        function fetchWeatherData() {
+            cities.forEach(city => {
+                const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`;
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            document.getElementById('weatherData').innerHTML += `<p>Error fetching data for ${city}! Please check you Internet connection!</p>`;
+                        } else {
+                            displayWeather(city, data);
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('weatherData').innerHTML += `<p>Error fetching data for ${city}!</p>`;
+                    });
+            });
+        }
+
+        function displayWeather(city, data) {
+            const weather = data.current;
+            const location = data.location;
+
+            const weatherHTML = `
+                <div class="data-container">
+                    <h3>Weather in ${location.name}, ${location.country}</h3>
+                    <p><strong>Temperature:</strong> ${weather.temp_c} °C</p>
+                    <p><strong>Description:</strong> ${weather.condition.text}</p>
+                    <p><strong>Country:</strong> ${location.country}</p>
+                    <p><strong>City:</strong> ${location.name}</p>
+                </div>
+            `;
+
+            document.getElementById('weatherData').innerHTML += weatherHTML;
+        }
+
+        fetchWeatherData();
+    </script>
+</body>
+
+</html>

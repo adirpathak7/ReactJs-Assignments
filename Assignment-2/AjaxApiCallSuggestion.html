@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Data with Autocomplete Search</title>
+    <style>
+        .data-container {
+            padding: 10px;
+            margin: 10px;
+        }
+
+        .suggestion-item {
+            padding: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <h1>API Data Fetching and Searching Auto Suggestions</h1>
+    <input type="search" name="searchProduct" id="search" placeholder="Search by name...">
+    <div id="searchResult"></div>
+    <div id="apiData"></div>
+
+    <script>
+        const apiKey = 'fac356c4f27840a5bd7191025241010';
+        const cities = ['Surat', 'Vadodara', 'Mumbai', 'Chennai', 'Lucknow'];
+
+        function fetchWeatherData() {
+            cities.forEach(city => {
+                const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`;
+
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    success: function (data) {
+                        if (data.error) {
+                            console.log(`Error fetching data for ${city}`);
+                        } else {
+                            displayWeather(city, data);
+                        }
+                    },
+                    error: function () {
+                        console.log(`Error fetching data for ${city}`);
+                    }
+                });
+            });
+        }
+
+        function displayWeather(city, data) {
+            const weather = data.current;
+            const location = data.location;
+
+            const weatherHTML = `
+                <div class="data-container">
+                    <h3>Weather in ${location.name}, ${location.country}</h3>
+                    <p><strong>Temperature:</strong> ${weather.temp_c} °C</p>
+                    <p><strong>Description:</strong> ${weather.condition.text}</p>
+                    <p><strong>Country:</strong> ${location.country}</p>
+                    <p><strong>City:</strong> ${location.name}</p>
+                </div>
+            `;
+
+            $('#apiData').append(weatherHTML);
+        }
+
+        function filterData(query) {
+            const searchQuery = query.toLowerCase();
+            const filteredData = cities.filter(function (city) {
+                return city.toLowerCase().includes(searchQuery);
+            });
+
+            displaySuggestions(filteredData);
+        }
+
+        function displaySuggestions(data) {
+            let searchOutput = '';
+
+            data.forEach(function (item) {
+                searchOutput += `
+                    <div class="suggestion-item" onclick="selectSuggestion('${item}')">
+                        ${item}
+                    </div>
+                `;
+            });
+
+            $('#searchResult').html(searchOutput).show();
+        }
+
+        function selectSuggestion(name) {
+            $('#search').val(name);
+            $('#searchResult').empty().hide();
+        }
+
+        $('#search').on('keyup', function () {
+            const query = $(this).val();
+            if (query.length > 0) {
+                filterData(query);
+            } else {
+                $('#searchResult').empty().hide();
+            }
+        });
+
+        fetchWeatherData();
+    </script>
+</body>
+
+</html>

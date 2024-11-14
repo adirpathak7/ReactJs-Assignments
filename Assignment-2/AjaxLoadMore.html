@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load More</title>
+    <style>
+        #content {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #content li {
+            padding: 10px;
+        }
+
+        #loadMore {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Load more data of API</h1>
+    <ul id="content"></ul>
+    <button id="loadMore">Load More</button>
+
+    <script>
+        const apiKey = 'fac356c4f27840a5bd7191025241010';
+        const cities = ['Surat', 'Vadodara', 'Mumbai', 'Chennai', 'Lucknow'];
+        let currentPage = 1;
+        const limit = 3;
+
+        document.getElementById('loadMore').addEventListener('click', loadMoreContent);
+
+        function loadMoreContent() {
+            const city = cities[currentPage - 1];
+
+            if (!city) {
+                document.getElementById('loadMore').textContent = 'No more cities';
+                document.getElementById('loadMore').disabled = true;
+                return;
+            }
+
+            const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const weatherData = JSON.parse(xhr.responseText);
+                    const data = {
+                        name: city,
+                        temp: weatherData.current.temp_c,
+                        condition: weatherData.current.condition.text,
+                        country: weatherData.location.country,
+                    };
+                    appendContent(data);
+                    currentPage++;
+                } else {
+                    console.error('Failed to fetch data:', xhr.statusText);
+                }
+            };
+
+            xhr.onerror = function () {
+                console.error('Request error...');
+            };
+
+            xhr.send();
+        }
+
+        function appendContent(item) {
+            const contentList = document.getElementById('content');
+            const listItem = document.createElement('li');
+
+            listItem.innerHTML = `
+                <strong>${item.name}, ${item.country}</strong><br>
+                Temperature: ${item.temp} °C<br>
+                Condition: ${item.condition}
+            `;
+            contentList.appendChild(listItem);
+        }
+
+        loadMoreContent();
+    </script>
+</body>
+
+</html>
