@@ -11,6 +11,7 @@ export default function ContactUs() {
     const handelFormSubmit = (e) => {
         e.preventDefault()
         const { name, email, password } = formData
+        const validEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
         if (!name) {
             document.getElementById('name-error').innerHTML = "Please enter the Name!"
             document.getElementById('name-error').style.color = 'red'
@@ -23,6 +24,12 @@ export default function ContactUs() {
             return false
         }
 
+        if (!email.match(validEmail)) {
+            document.getElementById('email-error').innerHTML = "Please enter valid Email!"
+            document.getElementById('email-error').style.color = 'red'
+            return false
+        }
+
         if (!password) {
             document.getElementById('password-error').innerHTML = "Please enter the Password!"
             document.getElementById('password-error').style.color = 'red'
@@ -30,6 +37,11 @@ export default function ContactUs() {
         }
 
         alert("Form is submited.")
+        setFormData({
+            name: '',
+            email: '',
+            password: ''
+        })
         return true
     }
 
