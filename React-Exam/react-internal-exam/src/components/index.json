@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "name": "Adi",
+        "dob": "14-10-2003",
+        "isMarriage": false
+    },
+    {
+        "id": 2,
+        "name": "Akash",
+        "dob": "28-06-2002",
+        "isMarriage": true
+    },
+    {
+        "id": 3,
+        "name": "Somnath",
+        "dob": "15-10-2003",
+        "isMarriage": false
+    }
+]
