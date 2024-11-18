@@ -31,7 +31,6 @@ export default function FQ() {
         <div>
             <h1>F&Q</h1>
             <div>
-
                 <button onClick={() => setIsToggel(!isToggel)}>
                     {isToggel ? 'On' : 'Off'}
                 </button>

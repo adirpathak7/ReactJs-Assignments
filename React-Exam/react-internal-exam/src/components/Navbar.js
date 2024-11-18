@@ -1,7 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
 export default function Navbar() {
+
+    useEffect(() => {
+        sessionStorage.setItem('username', 'Adi');
+        const sessionUser = sessionStorage.getItem('username');
+        if (sessionUser) {
+            console.log("Session storage username: " + sessionUser);
+        }
+
+        // sessionStorage.clear();
+    }, []);
 
     return (
         <div>
@@ -11,6 +21,7 @@ export default function Navbar() {
                 <Link to='/contact' className='link'>Contact Us</Link>
                 <Link to='/fq' className='link'>F&Q</Link>
             </nav>
+
         </div>
     )
 }
