@@ -5,6 +5,7 @@ export default function FQ() {
 
     const [state, setState] = useState('')
     const [city, setCity] = useState([])
+    const [counter, setCounter] = useState(0)
 
     const handleStateChange = (e) => {
         const selectedState = e.target.value
@@ -15,6 +16,16 @@ export default function FQ() {
             Maharashtra: ['Mumbai', 'Pune']
         }
         setCity(cityOptions[selectedState] || [])
+    }
+
+    const handelIncrement = () => {
+        setCounter(counter + 1)
+    }
+
+    const handelDecrement = () => {
+        if (counter > 0) {
+            setCounter(counter - 1)
+        }
     }
     return (
         <div>
@@ -46,6 +57,12 @@ export default function FQ() {
                         }
                     </select>
                 </label>
+            </div>
+
+            <div>
+                <p>{counter}</p>
+                <button onClick={handelIncrement}>Increment</button>
+                <button onClick={handelDecrement}>Decrement</button>
             </div>
         </div>
     )
